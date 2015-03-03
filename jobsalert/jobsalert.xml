@@ -4,11 +4,11 @@
 
    <title>Notification Addon</title>
 
-   <name>jobsalert</name>
+   <name>Notifications</name>
 
    <description><![CDATA[Notification Addon]]></description>
 
-   <author>HoangHuynh</author>
+   <author>James Helms</author>
 
    <url>http://www.joomsolutions.com</url>
 
@@ -16,7 +16,7 @@
 
    <version>1.0.0.0</version>
 
-   <copyright>Copyright (C) 2010-2014 joomlasell Team</copyright>    
+   <copyright>Copyright (C) 2010-2014 JoomSolutions</copyright>    
 
    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license> 
 

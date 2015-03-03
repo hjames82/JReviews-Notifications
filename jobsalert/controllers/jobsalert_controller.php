@@ -6221,7 +6221,7 @@ function renderLayout($controller, $action) {
 
             
 
-            $url = 'http://industrialjobs.org/index.php?option=com_jreviews&view=jobsalert&Itemid=982';
+            $url = 'index.php?option=com_jreviews&view=jobsalert&Itemid=982';
 
             $params->set( 'url' , $dat['permalink'] );
 

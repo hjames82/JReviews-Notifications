@@ -15,7 +15,7 @@ ini_set('display_errors', 1);
                               <table cellspacing="0" cellpadding="0" width="650" border="0" style="border-bottom:1px solid #cccccc">
                                 <tbody><tr>
                                   <td width="275" valign="middle" align="left" style="padding:30px">
-                                    <img width="190" height="47" alt="Freelancer" src="http://industrialjobs.org/templates/ja_sugite/images/logo.png" class="CToWUd">
+                                    <img width="190" height="47" alt="Freelancer" src="../images/logo.png" class="CToWUd">
                                   </td>
                                   <td width="255" valign="middle" align="right" style="font-family:Arial;font-size:14px;color:#555555;padding:30px">
                                     <strong>Notifications </strong><br><?php echo date('F d, Y') ?>
