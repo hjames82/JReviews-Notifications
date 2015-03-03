@@ -1,0 +1,351 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+       
+?>
+     
+  
+<div class="listJobsAlert">
+<div class="jrAddAlert  ">
+<div class="jrFieldDiv jrFieldDivAction" style="margin-top:15px;">
+
+	<button id="createJobsAlert" onclick ="jreviews.jobsalert.createAlert()" class="jr-jobsalert-create jrButton"><?php __t("Create Notification");?></button>
+
+</div>
+    
+</div>
+    <div class="jrDataList contentIndex">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol1">#</div>
+
+                <div class="jrCol2"><?php __t("Title");?></div>
+
+                <div class="jrCol7"><?php __t("Alert information");?></div>
+
+                <div class="jrCol1"><?php __t("Edit");?></div>
+		<div class="jrCol1"><?php __t("Delete");?></div>
+        </div>
+        <?php if($alerts){ ?>
+        <?php foreach ($alerts as $key => $alert) { ?>
+	        <div class="jrGrid ">
+	                <div class="jrCol1"><?php echo $key+1; ?></div>
+
+	                <div class="jrCol2"><a href="<?php echo$alert['url'] ?>"><?php __t($alert['title']);?></a></div>
+
+	                <div class="jrCol7">
+                            
+	                	<?php foreach ($alert['filter'] as $k => $filter) {
+                                   
+	                		__t('<strong>'.$filter['title'].' </strong> : '.$filter['text'].'</br>');
+	                	} ?>
+	                	</div>
+	      	<div class="jrCol1">
+		      	<div class="jrAddAler tjrEditAlert jrButton jrSmall jrIconOnly ">
+				        <a title="Edit alert" onclick="jreviews.jobsalert.editAlert(<?php echo $alert['alert_id']?>);return false;" class="jrIconManage" href="#"></a>
+			    </div>
+	      	</div>
+		      	 <div class="jrCol1">
+
+		      	<div class="jrDleteAlertr jrButton jrSmall jrIconOnly">
+				        <a title="Delete alert" onclick="jreviews.jobsalert.deleteAlert(<?php echo $alert['alert_id']?>);return false;" class="jrIconDelete" href="#"></a>
+			    </div>
+		      	</div>
+	        </div>
+      <?php   } ?>
+    <?php }else{ ?>
+	<div class="results">
+		<span class="text-no-results"><?php __a ('Your job alerts did not return any')?> <results class=""></results></span>
+	</div>
+    <?php } ?>
+
+ </div>   
+</div>
+<script>
+	jreviews = jreviews || {};
+		(function($,undefined){
+			jreviews.jobsalert  = {
+				loadAPI :false,
+                                msg:false,
+				formLoadingDiv : $('<div class="jrRoundedPanel" style="text-align:center;"><span class="jrLoadingMedium" style="display:inline;padding:20px;"></span>LOADING</div>'),
+				createAlert:function(){
+					var f = $('#system-message-container');
+					jreviews.jobsalert.formLoadingDiv.insertAfter(f);
+                                        $(f).html('');
+					var submittingAction = jreviews.jobsalert.dispatch({method:'get',type:'html',controller:'jobsalert',action:'create_alert'});
+
+		          			submittingAction.done(function(html){
+                                                   
+		          				jreviews.jobsalert.formLoadingDiv.remove();
+		          				$('.listJobsAlert').html(html);
+		          				  jreviews.jobsalert.renderAlertForm()      
+		          			})
+				},
+				deleteAlert:function(alert_id){
+					var 	notifi = $('#system-message-container'),
+				 	formLoadingDiv = $('<div class="jrRoundedPanel" style="text-align:center;"><span class="jrLoadingMedium" style="display:inline;padding:20px;"></span>LOADING</div>'),
+				 	sussion
+				 	content = $('div.listJobsAlert');
+
+		                                   notifi.html(formLoadingDiv).show();
+		                                   deleteAction = jreviews.dispatch({method:'post',type:'json',controller:'jobsalert',action:'_delete',data:{'data[alert_id]':alert_id}});
+		                                   deleteAction.done(function(json){
+
+                                                notifi.fadeOut();
+	                                   	if(json.error){
+	                                   		var error = 	'<div class="alert alert-error">'+
+								'<h4 class="alert-heading">Error</h4>'+
+								'<p>Remove failed with the following error:'+json.html+'.</p>'+
+								'</div>';
+	                                   		notifi.fadeOut().html(alert).fadeIn();
+	                                   	}else{
+	                                   		var success = 	'<div class="alert alert-success">'+
+								'<h4 class="alert-heading">Success</h4>'+
+								'<p>Alert successfully deleted.</p>'+
+								'</div>';
+
+						content.slideUp().html(json.html).slideDown(function(){
+							notifi.html(success).fadeIn();
+						});
+	                               			
+	                                   	}
+	                                   	
+	                                   })
+				},
+				editAlert:function(alert_id){
+                                    var f = $('#system-message-container');
+					jreviews.jobsalert.formLoadingDiv.insertAfter(f);
+                                        $(f).html('');
+					var submittingAction = jreviews.jobsalert.dispatch({method:'post',type:'html',controller:'jobsalert',action:'create_alert',data:{'data[alert_id]':alert_id}});
+
+		          			submittingAction.done(function(html){
+                                                   
+		          				jreviews.jobsalert.formLoadingDiv.remove();
+		          				$('.listJobsAlert').html(html);
+		          				  jreviews.jobsalert.renderAlertForm()      
+		          			})
+				},
+				goBack:function(){
+                                            
+                                 	   var f = $('div#system-message-container');
+                                            
+//	                                        if(jreviews.jobsalert.msg!=false)
+//	                                        {
+//	                                            var success = '<div class="alert alert-success">'+
+//									'<h4 class="alert-heading">Success</h4>'+
+//									'<p>'+jreviews.jobsalert.msg+'</p>'+
+//									'</div>';
+//	                                            $(f).html(success);
+//                                                    jreviews.jobsalert.msg=false;
+//	                                        }
+	                                           
+						jreviews.jobsalert.formLoadingDiv.insertAfter(f);
+						 submittingAction = jreviews.jobsalert.dispatch({method:'get',type:'html',controller:'jobsalert',action:'index'});
+						 submittingAction.done(function(html){
+                                                        f.html('');
+						 	jreviews.jobsalert.formLoadingDiv.remove();	
+						 	$('.listJobsAlert').html(html);
+						 })
+				},
+				 resetForm:function(){
+		                                    $('.ui-optionsDiv,.ui-helper-hidden-accessible,select:hidden').html('');
+		                                    $('input[type="text"]').val('');
+		                                    return false;
+		                                },
+                                AttectValueField:function(res){
+                                                    var json_string = jQuery('input.alert_is_edit').attr('data-field');
+                                                    if(json_string===undefined) return ;
+                                                    if(json_string!==undefined||json_string!==''){
+                                                               jsonField = JSON.parse(json_string);
+                                                    }
+                                                if(res.length===0) return;
+                                                $.each(res.control_field,function(k,fname){
+                                                    if(undefined !== res.fields && res.fields[fname].type == 'text'&&jsonField[fname]!=undefined) {
+                                                        
+                                                      var jr_field = $('input.'+fname);
+                                                      if(jr_field !== undefined){
+                                                           jr_field.val(jsonField[fname]);
+                                                        }
+                                                    }
+                                                    if(undefined !== res.fields && res.fields[fname].type == 'select'&&jsonField[fname]!=undefined){
+                                                        var jr_field = $('select.'+fname),
+                                                        divUiOptions = $('div[data-fname="'+fname+'"]');
+                                                        if(jr_field !== undefined&&res.fields[fname].options!==undefined&&jsonField[fname].length>0){
+                                                           
+                                                            jr_field.val(jsonField[fname]);
+                                                            $.each(jsonField[fname],function($j,$vl){
+                                                                var text = jr_field.find('option[value="'+$vl+'"]').text();
+                                                                a = jQuery('<a class="ui-option"></a>').text(text).attr({'href':'javascript:void(0)','data-value':$vl});
+                                                                 divUiOptions.show().append(a)
+                                                            })
+                                                            
+                                                            
+                                                        }
+                                                    }else if(undefined !== res.fields && res.fields[fname].type == 'select'){
+                                                        var jr_field = $('select.'+fname);
+                                                        jr_field.val('');
+                                                    }
+                                                })
+                                },
+				renderAlertForm:function(){
+	                                   var form = $('form#jr-form-jobsalert'),
+                                            $alert_id = $('input.alert_is_edit').val();
+	                                   searchFields = form.find('div.jr-jobsalert-fields');
+	                                   f=$('div.jrFormChooser');
+	                                   d = form.find('div.jr-jobsalert-fields');
+	                                   var formLoadingDiv = $('<div class="jrRoundedPanel" style="text-align:center;"><span class="jrLoadingMedium" style="display:inline;padding:20px;"></span>LOADING</div>');
+
+	                                   formLoadingDiv.insertAfter(f);
+	                                   submittingAction = jreviews.jobsalert.dispatch({method:'get',type:'html',controller:'jobsalert',action:'alert_form'});
+	                                   submittingAction.done(function(html){
+	                                    searchFields.html(html);
+                                            
+	                                    var loadingSearchFields = d.jreviewsFields({
+                                                    page_setup:true,
+                                                    referrer:'listing'
+                                                });
+	                                    if(loadingSearchFields) {
+	                                        loadingSearchFields.done(function(json) {
+                                                    console.log(json)
+	                                             var sl = searchFields.find('select');
+                                                      //jreviews.jobsalert.mapSearch();
+                                                      jreviews.geomaps.startup();
+                                                      if( typeof google != 'undefined'){
+                                                      	var advSearchModuleForm = jQuery('form.jr-form-adv-search-module') || [],
+                                                            proximityFieldModule = advSearchModuleForm.find('.'+jreviews.geomaps.fields.proximity),
+                                                            autocomplete = jreviews.geomaps.autocomplete && typeof google.maps.places != 'undefined';
+
+                                                        advSearchModuleForm.jrProximitySearch({fields: jreviews.geomaps.fields, autocomplete: autocomplete});
+                                                        
+                                                        proximityFieldModule.jrGeolocation({
+										lat_input_name: jreviews.geomaps.fields.lat,
+										lon_input_name: jreviews.geomaps.fields.lon
+									});
+
+                                                      }
+                                                      
+                                                     /* set radius value edit */
+                                                     var radius = jQuery('input.alert_is_edit').attr('data-radius');
+                                                            if(radius!=undefined&&radius!=0){
+                                                              jQuery('select#jr_radius').val(radius)
+                                                            }
+                                                    /* append radius field */
+                                                     var group = $('div.jrRadius').attr('data-group');
+                                                      $('div.jrRadius').appendTo('#'+group).removeClass('jrHidden');
+	                                            /*Add mutilple select */
+                                                    $(jreviews.jobsalert.mutil).each(function(index,value){
+                                                       var mutil = $('select[name="data[Field][Listing]['+value+']"]');
+                                                       if($alert_id!==undefined)
+                                                            mutil.find('option[value=""]').remove();
+                                                        else
+                                                            mutil.html('');
+                                                       if(mutil.attr('multiple')==undefined){
+                                                           
+                                                           $(mutil).attr({'multiple':'multiple','name':$(mutil).attr('name')+'[]'});
+                                                       }
+                                                    });
+                                                    var mutiple = $('select[multiple="multiple"]').prev().append(' (Mutil-Select)');
+                                                    //attect valuefield
+                                                    jreviews.jobsalert.AttectValueField(json);
+	                                            formLoadingDiv.remove();
+	                                            searchFields.show();
+	                                            var fbt = $('.jrFieldDivAction'),
+                                                     divNotifications = $('#system-message-container'),
+	                                            infoDiv = $('<div class="jrInfo"></div>'),
+	                                            jrError = $('<div class="jrError"></div>');
+	                                           form.on('click','#submitJobsAlert',function(){
+	                                            infoDiv.remove();
+	                                            jrError.remove();
+	                                            formLoadingDiv.insertAfter(fbt);
+	                                            saveAction = jreviews.jobsalert.dispatch({method:'post',type:'json',controller:'jobsalert',action:'_save',form_id:'jr-form-jobsalert',form:form});
+	                                            saveAction.done(function(json){
+	                                                formLoadingDiv.remove();
+	                                                if(undefined!=json.error){
+	                                                    jrError.insertAfter(fbt).html(json.msg);;
+	                                                }else{
+	                                                     infoDiv.html(json.msg);
+                                                             if(json.insertid){
+                                                                 
+                                                             var input_id = '<input type="hidden" value="'+json.insertid+'" name="data[Field][alert_id]" class="alert_is_edit">',
+                                                                btn_create = $('#submitJobsAlert'); 
+                                                                form.append(input_id);
+                                                                btn_create.html('Save');
+                                                            }
+                                                            divNotifications.show().append(infoDiv);
+                                                            var offset = divNotifications.offset();
+                                                            $("html, body").animate({scrollTop: offset.top-50}, 500);
+                                                            //jreviews.jobsalert.goBack();
+                                                            
+	                                                }
+	                                            })
+	                                             return false;
+	                                           });
+
+	                                        });
+	                                    }
+	                                    else {
+	                                        formLoadingDiv.remove();
+	                                    }
+	                                })
+                               },
+                                mapSearch:function(){
+//                                    if($('form#jr-form-jobsalert').find('input.jr_address')!=undefined)
+//                                    {
+//                                         //$('form#jr-form-jobsalert').find('input.jr_address').attr({'autocomplete':'off','id':'gmapAddress'});
+//                                        var input = document.getElementById('gmapAddress');
+//                                        var options = {
+//                                          types: ['(cities)'],
+//                                          componentRestrictions: {country: "us"}
+//                                        };
+//                                        var autocomplete = new google.maps.places.Autocomplete(input, options);
+//                                        google.maps.event.addListener(autocomplete, 'place_changed', function(){
+//                                          var place = autocomplete.getPlace();
+//                                         console.log(place.geometry.location); 
+//                                          if (place.address_components) {
+//                                               console.log(place.geometry.location);
+//                                          }
+//                                        }); 
+//                                    }
+                                                
+                                } ,
+                                dispatch : function(options) {
+
+                                    options = options || {};
+
+                                    var method =  (options.form_id !== undefined || options.form !== undefined) ? 'POST' : 'GET';
+
+                                    if(undefined !== options.method) method = options.method;
+
+                                    var data =  options.controller !== undefined ? $.param({'data[controller]':options.controller,'data[action]':options.action}) : {};
+
+                                    var type = options.type || "json";
+
+                                    if(undefined !== options.form_id || undefined !== options.form)
+                                    {
+                                        var form = options.form || $('#'+options.form_id);
+
+                                        if(undefined !== options.controller) {
+
+                                            form.find('input[name=data\\[controller\\]], input[name=data\\[action\\]]').remove();
+                                        }
+
+                                        data = form.serialize()+'&'+data;
+                                    }
+
+                                    if(options.data) data = data + '&' + $.param(options.data);
+
+                                    return $.ajax({type: method, url: s2AjaxUri, data: data, dataType: options.type});
+                                }
+                                  
+				
+			}
+	})(jQuery);
+			</script>
+                        

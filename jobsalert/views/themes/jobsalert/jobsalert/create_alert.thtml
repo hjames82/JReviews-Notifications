@@ -1,0 +1,206 @@
+<?php
+
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+
+/**********************************************************************************
+ *                              EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+$title =false;
+$button_save = 'Create';
+$alert_id =false;
+$type_scheduler_array = array('today'=>'Daily','week'=>'Weekly','-14'=>'Bi-Weekly','month'=>'Monthly');
+$type_query_array= array('any'=>'Any','all'=>'All','exact'=>'Exact');
+$filter_old_array= array('No','Yes');
+$type_scheduler = 'today';
+$keywords = '';
+$scope = array('title','introtext');
+$type_query = 'any';
+$is_edit = false;
+$filter_old = 0;
+$json_filter =false;
+if($alert){
+   // $params = json_decode($alert['JobsAlert']['params'])
+    $button_save = 'Save';
+    $alert = $alert['JobsAlert'];
+    $params = json_decode($alert['params']);
+    $filers = $params->filter;
+    $title = $alert['title'];
+    $type_scheduler = $alert['type_scheduler'];
+    $type_scheduler_array[$type_scheduler ];
+    $keywords = isset($filers->keywords)?$filers->keywords:false;
+    $scope = isset($filers->scope)?$filers->scope:false;
+    $type_alert = $alert['type_alert'];
+    $is_edit = $alert['alert_id'];
+    $type_query = isset($filers->search_query_type)?$filers->search_query_type:'any';
+    $value_radius = isset($filers->jr_radius)?$filers->jr_radius:0;
+    $filter_old = $params->filter_old;
+    $json_filter = json_encode($filers); 
+}
+
+?>
+<div class="jrFieldDiv goBack" style="margin-top:15px;">
+    <button class="jr-back jrButton " onclick=" jreviews.jobsalert.goBack(false);
+            return false;" ><?php __t("Back");?></button>
+</div>
+<div class="jr-page jrPage jrAdvSearchPage1">
+    <?php if($limited&&!$alert){ ?>
+
+    <div class="jrPageHeader clearfix">
+
+        <h1 class="contentheading"><?php __t("You only create $alerts_limit alerts");?></h1>
+
+    </div>
+
+    <?php }else{?>
+    <div class="jrPageHeader clearfix">
+
+        <h1 class="contentheading">
+            <?php
+                   $is_edit ?  __t("Edit Notification"):__t("Create Notification");
+            ?>
+            </h1>
+
+    </div>
+    <div class="jrFormContainer jrForm">
+
+        <form id="jr-form-jobsalert" class="jr-form-adv-search-module" name="jr-form-jobsalert" action="<?php echo cmsFramework::getCurrentUrl();?>" method="post">
+
+
+
+
+            <fieldset>
+
+                <div class="jrFieldDiv jr-jobsalert-title">
+
+                            <label class="jrLabel" for="jr_title"><?php __a("Notification Title")?></label>
+                            <input id="jr_title" <?php echo $title?'value="'.$title.'"':'' ?> class="jrAutoSuggest ui-autocomplete-input acInstructions" name="data[jrtitle]"type="text" name="text-jr_state" autocomplete="off">
+                        
+                </div>
+            </fieldset>	
+
+            <fieldset>
+
+                <div class="jrFieldDiv">
+
+                    <div class="jrFieldOption">
+
+                        <input name="data[Field][Listing][scope][]" id="title" type="checkbox" value="title" <?php if(in_array('title', $scope)) echo 'checked="checked" ' ?> /><?php __t("Listing title");?>
+
+                    </div>
+
+					<?php if($this->Config->content_summary != 'hidden'):?>
+
+                    <div class="jrFieldOption">
+
+                        <input name="data[Field][Listing][scope][]" id="introtext" type="checkbox" value="introtext" <?php if(in_array('introtext', $scope)) echo 'checked="checked" ' ?> /><?php __t("Listing summary");?>
+
+                    </div>
+
+					<?php endif;?>
+
+                </div>
+
+                <div class="jrFieldDiv">
+                    <label class="jrLabel" for="jr_title"><?php __a("Keywords")?></label>
+                    <input type="text" id="keywords" name="data[Field][Listing][keywords]" class="jrTitle" value="<?php echo $keywords ?>" />
+
+                </div>
+<!--                <div class="jrFieldDiv jrLeft">
+
+                    Address: 
+                                <input id="gmapAddress" type="text" class="jr_address jrText" name="data[Field][Listing][jr_address]" placeholder="Enter a location" autocomplete="off">
+                                
+                </div>-->
+            </fieldset>
+
+            <div id="jr-jobsalert-fields" class="jr-jobsalert-fields ">
+
+                <?php if(isset($searchFields)):?>
+                    <?php echo $this->renderControllerView('jobsalert','alert_form',array('radius'=>10,'vovan'=>'aaaaaaaaaaaaa'));?>
+                <?php endif;?>
+
+            </div>
+            </br>
+<fieldset style="margin: 15px 0;">
+    <legend><?php __t("Notification Preferences");?></legend>
+        <div class="jrFieldDiv">
+                 <div class="jrFieldOption">
+                        <div class="jrtypeOption">
+                            <label><?php echo __t("Notification type",true);?></label></br>
+                                <input <?php if($type_alert==2||$type_alert==3) echo 'checked="checked" ' ?>id="jr_alerttype_email" class="jr_contacttype" type="checkbox" value="2" name="data[Field][jr_alerttype][]">
+                                <label for="jr_alerttype_email"><?php __t("Email") ?></label>
+                                <input <?php if($type_alert==1||$type_alert==3) echo 'checked="checked" ' ?> id="jr_alerttype_notification" class="jr_alerttype" type="checkbox" value="1" name="data[Field][jr_alerttype][]">
+                                <label for="jr_alerttype_notification"><?php __t("Notification") ?></label>
+                        </div>	
+
+                        <div class="jrschedulerOption">
+                            <label><?php  echo __t("Notification Frequency",true);?></label></br>
+                                <?php foreach($type_scheduler_array as $key=>$value ): ?>
+                                <input id="jr_<?php echo $key ?>_scheduler" <?php if($type_scheduler==$key) echo 'checked="checked"'; ?>   class="jr_schedulertype" type="radio" value="<?php echo $key ?>" name="data[Field][jr_alert_scheduler]">
+                                <label for="jr_daily_scheduler"><?php __t($value) ?></label>
+                                <?php endforeach; ?>
+                        </div>
+                          <div class="jrFieldOption">
+                                    <label><?php __t("Match Results");?></label></br>
+                                    <?php foreach($type_query_array as $key=>$query): ?>
+                                    <input name="data[Field][Listing][search_query_type]" id="search_query_<?php echo $key ?>" type="radio" value="<?php echo $key; ?>" <?php if($type_query==$key) echo 'checked="checked"'; ?>  />
+                                    <label for="search_query_<?php echo $key ?>"><?php __t($query) ?></label> 
+                                    <?php endforeach; ?>
+                                 
+
+                            </div>
+                     </br>
+                             <div class="jrFieldOption">
+                             <label><?php __t("Filter has reported");?></label></br>
+							 <label><?php __t("Select No and already post jobs will be report | Select Yes and already post jobs will not be report");?></label></br>
+                             <?php foreach($filter_old_array as $key=>$value ): ?>
+                              <input name="data[Field][filter_old]"class="filter_old" type="radio" value="<?php echo $key ?>"  <?php if($filter_old==$key) echo 'checked="checked"'; ?>  />
+                                <label for="filter_old"><?php __t($value) ?></label> 
+                              <?php endforeach; ?>
+                             </div>
+                </div>
+        </div>
+
+    </fieldset>
+<div class="jrFieldDiv jrFieldDivAction" style="margin-top:15px;">
+
+        <button id="submitJobsAlert"class="jr-jobsalert-create jrButton"><?php __t($button_save);?></button>
+        <button id="resetForm"class="jr-jobsalert-reset jrButton" onclick="jreviews.jobsalert.resetForm();return false;"><?php __t("Reset");?></button>
+
+</div>
+            <?php if($is_edit): ?>
+            <input type="hidden" data-field='<?php echo $json_filter? $json_filter:'' ?>'  class="alert_is_edit" data-radius="<?php echo $value_radius; ?>" name="data[Field][alert_id]" value="<?php echo $is_edit; ?>" />
+            <?php endif;?>
+            <input type="hidden" name="option" value="com_jreviews" />
+            <input type="hidden" name="data[controller]" value="jobsalert" />
+            <input type="hidden" name="data[criteria_id]" value="<?php echo $criteria_id ?>" />
+            <input type="hidden" name="data[action]" value="_save" />
+
+            <input type="hidden" name="data[menu_id]" value="<?php echo $search_itemid;?>" />
+            
+        </form>
+
+    </div>
+    <?php }?>
+</div>
+<style>
+    .jrInputButtonRow .jrInputButton {
+    margin-top: 0;
+    padding: 0;
+    position: absolute;
+    right: -76px;
+    top: -12px;
+}
+    </style>
+   

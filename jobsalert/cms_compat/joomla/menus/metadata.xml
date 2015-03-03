@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<menu>
+		<options var="view">
+			<option name="COM_JREVIEWS_JOBSALERT" msg="COM_JREVIEWS_JOBSALERT_MSG" value="jobsalert" />
+		</options>
+	</menu>
+</metadata>
+
+

@@ -1,0 +1,26 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+//prx($revenue);
+?>
+<div class="jrMenuModule">
+   <button class="jr-main-menu jrButton"><span class="jrIconPrev"></span>Back to JReviews</button>
+ 
+      <div class="jrMenuModuleHeader">Notification Setup</div>
+ 
+<div class="jrCol12">
+          <ul>
+              <li>
+              	<a href="javascript:void(0)" class="jr-menu" data-controller="admin_jobsalert" data-action="index">Configuration</a>
+              </li>
+               <li>
+              	<a href="javascript:void(0)" class="jr-menu" data-controller="admin_jobsalert_email" data-action="index">Email Layout</a>
+              </li>
+          </ul>
+      </div>
+  </div>

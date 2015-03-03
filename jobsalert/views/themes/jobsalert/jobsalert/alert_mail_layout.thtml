@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined('MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+$Text = ClassRegistry::getClass('TextHelper');
+?>
+<?php if(count($listings)>0): ?>
+<div class="jrResults">
+    <div id="jr-listing-column" class="jrListingColumn">
+    <?php foreach ($listings as $key => $listing) { ?>
+        <?php
+            $listing_url = JURI::base().$listing['Listing']['url'];
+        ?>
+        <div class="jr-layout-outer jrListItem row1">
+
+            <div class="jrListingContent">
+
+
+                <div class="jrContentTitle"><a id="jr-listing-title-<?php echo $listing['Listing']['listing_id'] ?>" href="<?php echo $listing_url ?>"><?php echo $listing['Listing']['title']; ?> </a>
+                    <span class="jrStatusIndicators">
+
+                    </span>
+                </div>
+                <div class="jrListingInfo"> <?php echo $listing['Category']['title'] ?><br>
+                    Written by 
+                    <a href=""><?php echo $listing['User']['name'] ?></a>
+                    <?php echo date('M-d,Y',strtotime($listing['Listing']['created']))?>
+                </div>
+                <div class="jrListingSummary">
+                    <?php //echo $listing['Listing']['summary']?>
+                   <?php echo substr($listing['Listing']['summary'],0,150);
+                         echo strlen($listing['Listing']['summary'])>156?'...':'';
+                   ?>
+                </div>
+            </div>
+                    <a rel="nofollow" class="jrButton jrSmall" href="<?php echo $listing_url ?>">Read more</a> 
+           </div>
+    <?php }?>    
+    </div>
+<?php endif; ?>
+
+</div>

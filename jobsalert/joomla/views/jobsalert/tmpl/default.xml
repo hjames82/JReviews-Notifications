@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_JOBSALERT_VIEW_DEFAULT_TITLE">
+            <![CDATA[COM_JREVIEWS_JOBSALERT_VIEW_DEFAULT_TITLE]]>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="Jobs Alert Addon">
+
+            <!-- The action field matches the name of the class method in the controller. If you want to hace menus for different methods inside the same controller use a list instead of a hidden input -->
+
+            <field name="action" type="hidden" default="index" />
+
+            <field name="tmpl_suffix" type="text" size="20" default="" label="Theme suffix" description="some text description input." />
+
+            <field name="listings" type="text" size="4" default="5" label="# of Listings" />
+
+            <field name="reviews" type="text" size="4" default="5" label="# of Reviews" />
+
+        </fieldset>
+
+    </fields>
+
+</metadata>

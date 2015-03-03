@@ -1,0 +1,90 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+//prx($revenue);
+
+?>
+<div class="jr-jobsalert-admin"> 
+ 
+    <div class="jrPageHeading"><?php __a("IJOBS_ADMIN_TITLE");?></div> 
+ 
+    <form id="jr-admin-jobsalert-form" class="jrForm" action="index.php" method="post"> 
+ 
+        <div class="jrPageToolbar jrRoundedPanel"> 
+ 
+            <span id="jr-status" class="jrLeft jrStatus"></span> 
+ 
+            <button class="jr-save-settings jrButton jrGreen"><span class="jrIconSave"></span><?php __a("IJOBS_ADMIN_INDEX_SAVE");?></button> 
+ 
+        </div> 
+ 
+       <div> 
+           
+             <?php
+                $configArray = array(
+                /*** NEW HEADER ***/
+                'General Settings' => array(
+                    array(
+                        'label'=>'Alert create limit',
+                        'type'=>'select',
+                        'options'=>array_slice(range(0,30), 1, NULL, TRUE),
+                        'name'=>'data[Config][alerts_limit]',
+                        'help'=>'Limit user create alert',
+                        'attributes'=>array('class'=>'jr-input jr-admin-jobsalert-limit-input')
+                    ),
+                    array(
+                        'label'=>'Listing Types',
+                        'type'=>'select',
+                        'options'=>$listingTypes,
+                        'name'=>'data[Config][criteria_id]',
+                        'help'=>'Limit title modifier to the selected listing types',
+                        'attributes'=>array('class'=>'jr-multiselect jr-admin-jobsalert-cat-select')
+                    )
+                )
+            );
+
+            $AdminSettings->columns = array(5,8,11);
+            
+            $AdminSettings->displayTab('general',$configArray);
+            
+            ?>
+        </div>
+        <div id="jr-cat-fields" class="jr-cat-fields jrHidden jrDataList"> </div>
+        <input type="hidden" name="data[controller]" value="admin/admin_jobsalert" />
+        <input type="hidden" name="data[action]" value="_save" /> 
+ 
+    </form> 
+ 
+</div>
+<script>
+jreviews = jreviews || {};
+(function($,undefined){
+            jreviews.jobsalert = {
+                    adminConfigPage:function(){
+                        var form = $('#jr-admin-jobsalert-form');
+                           catSelect = form.find('.jr-admin-jobsalert-cat-select'),
+                            searchFields = form.find('div.jr-cat-fields');
+                             jreviews.jobsalert.loadFields(catSelect);
+                           form.on('change','select.jr-admin-jobsalert-cat-select',function(e)    {
+                                jreviews.jobsalert.loadFields($(this));
+                           })
+                    },
+                    loadFields:function(el){
+                        $('.jr-page-spinner').show();
+                         var criteria_id = el.val();
+                                submittingAction = jreviews.dispatch({method:'get',type:'html',controller:'admin/admin_jobsalert',action:'_loadField',data:{criteria_id:criteria_id}});
+                                submittingAction.done(function(html){
+                                searchFields.html(html).show();
+                                 $('.jr-page-spinner').hide();
+                           })
+                    }
+            }
+             jreviews.jobsalert.adminConfigPage();
+}(jQuery));
+
+</script>

@@ -1,0 +1,59 @@
+<?php 
+defined('MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+$url = cmsFramework::route($url);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+    $loop = Sanitize::getString($this->Config,'email_listing_loop');
+     $template = Sanitize::getString($this->Config,'email_layout');
+ 
+        if(preg_match('%\{nt_date\}(.*?)\{\/nt_date\}%', $template, $regs)){
+            $template = preg_replace("%\{nt_date\}(.*?)\{\/nt_date\}%", date($regs[1]), $template);
+        }
+        if(preg_match('%\{nt_count_listing\}%', $template, $regs)){
+            $template = preg_replace("%\{nt_count_listing\}%", count($listings), $template);
+        }
+        if(preg_match('%\{nt_username\}%', $template, $regs)){
+            $template = preg_replace("%\{nt_username\}%", $alert['username'], $template);
+        }
+        if(preg_match('%\{nt_title\}%', $template, $regs)){
+            $template = preg_replace("%\{nt_title\}%", $alert['title'], $template);
+        }
+        if(preg_match('%\{nt_url\}%', $template, $regs)){
+           
+            $template = preg_replace("%\{nt_url\}%", $alert['url'], $template);
+        }
+        $body = '';
+        foreach($listings as $listing){
+            $tmp=$loop;
+            foreach ($listing['Listing'] as $key=>$field){
+                $pattern = '#lt_'.$key.'#';
+                if(preg_match($pattern, $tmp, $regs)){
+                    if($key=='title'){
+                        $field = $Routes->content($listing['Listing']['title'],$listing,array('class'=>'none_decoration','target'=>'_blank','id'=>'jr-listing-title-'.$listing['Listing']['listing_id']));
+                    }
+                    $tmp= preg_replace($pattern, $field, $tmp);
+                }
+            }
+            foreach ($customFields as $fielName){
+                $pattern = '#'.$fielName.'#';
+                if(preg_match($pattern, $tmp, $regs)){
+                    $ctfield = isset($listing['Field']['pairs'][$fielName])?$CustomFields->display($fielName,$listing):array();
+                    $ctfield = implode(' | ', $ctfield);
+                    $tmp = preg_replace( $pattern , preg_escape_back($ctfield) , $tmp ); // Fails 
+                }
+            }
+           $body .=$tmp;
+        }
+        
+        if(preg_match('%\{JR_LISTING_LOOP\}%', $template, $regs)){
+            $template = preg_replace("%\{JR_LISTING_LOOP\}%", preg_escape_back($body) , $template);
+        }
+      echo $template;
+      // Escape backreferences from string for use with regex 
+function preg_escape_back($string) { 
+    // Replace $ with \$ and \ with \\ 
+    $string = preg_replace('#(?<!\\\\)(\\$|\\\\)#', '\\\\$1', $string); 
+    return $string; 
+} 
+ ?>

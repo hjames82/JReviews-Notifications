@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<menu>
+		<options var="view">
+			<option name="COM_JREVIEWS_JOBSALERT_MYACCOUNT" msg="COM_JREVIEWS_JOBSALERT_MYACCOUNT_MSG" value="jobsalert" />
+			<option name="COM_JREVIEWS_JOBSALER_PLANS" msg="COM_JREVIEWS_JOBSALERT_PLANS_MSG" value="jobsalert_scheduler" />
+		</options>
+	</menu>
+</metadata>

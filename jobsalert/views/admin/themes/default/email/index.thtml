@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+<div class="jr-jobsalert-admin"> 
+
+    <div class="jrPageHeading"><?php __a("IJOBS_ADMIN_EMAIL_TITLE");?></div> 
+
+    <form id="jr-form-admin-email" class="jrForm" action="index.php" method="post"> 
+
+        <div class="jrPageToolbar jrRoundedPanel"> 
+
+            <span id="jr-status" class="jrLeft jrStatus"></span> 
+
+            <button class="jr-save-email-settings jrButton jrGreen"><span class="jrIconSave"></span><?php __a("IJOBS_ADMIN_EMAIL_INDEX_SAVE");?></button> 
+
+        </div> 
+        <div class="jrFieldDiv">
+                <textarea name="data[email_layout]" id="email_layout" cols="200" rows="15" style="width:100%;" class="jr-wysiwyg-editor"><?php echo $emailLayout; ?></textarea>
+                <textarea style="display:none" name="data[email_listing_loop]" id="email_listing_loop" cols="200" rows="15" style="width:100%;"><?php echo $email_listing_loop; ?></textarea>
+        </div>
+        <input type="hidden" name="data[controller]" value="admin/admin_jobsalert_email" />
+        <input type="hidden" name="data[action]" value="_save" /> 
+
+    </form> 
+
+</div>
+<script>
+(function($,undefined){
+    $.fn.SaveTinyMCE = function() {
+
+                var el = this;
+
+                try {
+
+                        if (typeof tinyMCE == 'object') {
+
+                                return el.each(function() {
+
+                                        tinyMCE.get(this.id).save();
+                                });
+                        }
+
+                } catch (err) {
+
+                        console.log(err);
+                }
+        };
+    jQuery('.jr-wysiwyg-editor').tinyMCE(); 
+  // save settings
+      jrPage.on('click','button.jr-save-email-settings',function(e) {
+            e.preventDefault();
+             e.preventDefault();
+           jQuery('.jr-wysiwyg-editor').SaveTinyMCE();
+            var content = jQuery('#email_layout').val();
+            jQuery('#jr-form-admin-email').append('<div class="hidden_tmp" style="display:block">'+content+'</div>');
+            jQuery('.listing_info').after('{JR_LISTING_LOOP}');
+            jQuery('.listing_info').wrap('<p class="wrap_tmp"></p>');
+            var loop = jQuery('.wrap_tmp').html();
+            jQuery('.wrap_tmp').remove();
+            var tmp_content = jQuery('.hidden_tmp').html();
+            jQuery('#email_listing_loop').val(loop);
+            jQuery('#email_layout').val(tmp_content);
+            jQuery('.hidden_tmp').remove();
+              var el = jQuery(this),
+                  form = el.closest('form');
+              var savingSettings = jreviews.dispatch({type:'html',form:form});
+
+              savingSettings.done(function(html) {
+
+                  if(html !== '') {
+
+                      page.html(html).promise().done(function(){
+                          jreviews.tools.statusUpdate(jreviews.__t('SETTINGS_SAVED'));
+
+                      });
+                  }
+                  else {
+
+                      jreviews.tools.statusUpdate(jreviews.__t('SETTINGS_SAVED'));
+                  }
+
+              });
+      });
+}(jQuery));
+
+</script>

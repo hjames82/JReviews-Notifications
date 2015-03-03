@@ -1,0 +1,68 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+//prx($revenue);
+$params = $params ->{$criteria_id};
+?>
+<?php if(count($searchFields)): ?>
+<?php  foreach ($searchFields as $key => $group) { ?>
+        <?php if(count($group['Fields'])):  ?>
+                <div id="jr-cat-group<?php echo $group['group_id'] ?>" class="jr-cat-group  " style="display: block;">
+                        <fieldset id="group_<?php echo _($group['group_id']); ?>" class="jrHidden jrFieldsetMargin" style="display: block;">
+                            <legend><?php echo _($key) ?></legend>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td><?php __a("IJOBS_ADMIN_INDEX_FIELD_TITLE")?></td>
+                                        <td><?php __a("IJOBS_ADMIN_INDEX_FIELD_ENABLE")?></td>
+                                        <td><?php //__a("IJOBS_ADMIN_INDEX_FIELD_MULTIPLE")?></td>
+                                        <td><?php //__a("IJOBS_ADMIN_INDEX_FIELD_MULTIPLE")?></td>
+                                    </tr>
+                                </thead>
+                                <?php foreach ($group['Fields'] as $k => $field) { ?>
+                            <tr>
+                                <?php 
+                                $sl = '';
+                                $mt = '';
+                                    if(isset($params)&&isset($params->{$field['group_id']}->{$field['field_id']})&&isset($params->{$field['group_id']})){
+                                      $params->{$field['group_id']}->{$field['field_id']};
+                                      if($params->{$field['group_id']}->{$field['field_id']}->status=='on'){
+                                          $sl = 'checked';
+                                      }
+                                      if($params->{$field['group_id']}->{$field['field_id']}->mutil=='on'){
+                                          $mt = 'checked';
+                                      }
+                                          
+                                    }
+                                 ?>
+                                    <td>
+                                        <label for="<?php echo $field['name'] ?>"><?php echo _($field['title'] ) ?>:</label>
+                                    </td>
+                                    <td>
+                                        <input <?php echo $sl ?> id="<?php echo $field['name'] ?>" type="checkbox" name="data[Config][showFields][<?php echo $criteria_id ?>][<?php echo _($field['group_id']); ?>][<?php echo _($field['field_id']); ?>][status]"></br>
+                                    </td>
+                                    <td>
+                                    <?php if($field['type']=='select'):?>
+                                        <label for="<?php echo $field['name'] ?>"><?php  __a("IJOBS_ADMIN_INDEX_FIELD_MULTIPLE") ?>:</label>
+                                        <?php endif ?>
+                                    </td>
+                                    <td>
+                                        <?php if($field['type']=='select'):?>
+                                        <input type="checkbox" <?php echo $mt?> name="data[Config][showFields][<?php echo $criteria_id ?>][<?php echo _($field['group_id']); ?>][<?php echo _($field['field_id']); ?>][mutil]"/>
+                                            <?php endif ?>
+                                    </td>    
+                                    </tr>
+                                <?php } ?>
+                                 
+                            </table> 
+                        </fieldset>
+                    
+                </div>
+         <?php endif; ?>       
+ <?php } ?>
+ <?php endif; ?>

@@ -1,0 +1,153 @@
+<?php 
+defined('MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+$url = cmsFramework::route($url);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ ?>
+<table>
+    <tbody>
+        <tr>
+            <td>
+                <table cellspacing="0" cellpadding ="0" width="650" border="0" bgcolor="#ffffff" align ="center" style="border:10px solid #c8e5f6">
+                    <tbody>
+                        <tr>
+                            <td valign="top" align="left">
+                              <table cellspacing="0" cellpadding="0" width="650" border="0" style="border-bottom:1px solid #cccccc">
+                                <tbody><tr>
+                                  <td width="275" valign="middle" align="left" style="padding:30px">
+                                    <img width="190" height="47" alt="Freelancer" src="http://industrialjobs.org/templates/ja_sugite/images/logo.png" class="CToWUd">
+                                  </td>
+                                  <td width="255" valign="middle" align="right" style="font-family:Arial;font-size:14px;color:#555555;padding:30px">
+                                    <strong>Notifications </strong><br><?php echo date('F d, Y') ?>
+                                  </td>
+                                </tr>
+                              </tbody></table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" align="left">
+                                <table cellspacing="0" cellpadding="0" width="650" border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="100%" height="20" colspan="3">
+                                            <img width="1" height="1" src="https://ci3.googleusercontent.com/proxy/4RHRIbpzAeGFkatKu_GSZnRF9_DM-JJuxGiFeaCsSXaEqyjwv04ZWts3J_3BgcX06vqRoYCk6O8i7XwiE0OuZH2HEytm2o0J_epCVN-l3pEyTvC5xhLzxS7_JmKw6sEEc8J_8YOAMSU9geAjeY75fg=s0-d-e1-ft#https://d2zhnbd2ktjxul.cloudfront.net/img/blank.gif?v=d21d1c04745849be6d176cdeb8d06f4b&amp;m=2" class="CToWUd">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="610" style="padding:0 30px;">
+                                            <p style="font-family:Arial;font-size:20px;margin-bottom:0.5em;margin-top:0">Hello <?php echo $username ?>!</p>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="610px" style="font-family:Arial;font-size:14px;padding:0 30px 20px 30px">
+                                                <p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#3e3e3e;line-height:1.4">
+                                                    <?php echo 'You have '.count($listings).' notifications from <b>'.$alert_title.'</b>.<br>' ;?> 
+                                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat
+                                                </p>
+                                                <table cellspacing="0" cellpadding="0" width="100%" border="0" align="center" style="font-family:Arial,Helvetica,Sans-Serif; border-bottom:1px solid #ccc;">
+                                                    <tbody class="js-body-list-jobs">
+                                                    
+                                                        <tr bgcolor="#005d88">
+                                                            <td width="30" bgcolor="#005d88" style="border-top-left-radius:3px;line-height:0;font-size:1px;padding-left:10px;">
+                                                            </td>
+                                                            <td width="460" bgcolor="#005d88" style="margin:0;padding:0">
+                                                                <h3 style="color:#fff;font-size:14px;line-height:1em;font-weight:normal;margin:10px 0">Jobs Description</h3>
+                                                            </td>
+                                                            <td width="110" bgcolor="#005d88" align="center">
+                                                                <h3 style="color:#fff;font-size:14px;line-height:1em;font-weight:normal;margin:10px 0">Budget</h3>
+                                                            </td>
+                                                            <td width="10" bgcolor="#005d88" style="border-top-right-radius:3px;line-height:0;font-size:1px">
+                                                                <img width="1" height="1" src="https://ci3.googleusercontent.com/proxy/4RHRIbpzAeGFkatKu_GSZnRF9_DM-JJuxGiFeaCsSXaEqyjwv04ZWts3J_3BgcX06vqRoYCk6O8i7XwiE0OuZH2HEytm2o0J_epCVN-l3pEyTvC5xhLzxS7_JmKw6sEEc8J_8YOAMSU9geAjeY75fg=s0-d-e1-ft#https://d2zhnbd2ktjxul.cloudfront.net/img/blank.gif?v=d21d1c04745849be6d176cdeb8d06f4b&amp;m=2" class="CToWUd">
+                                                            </td>
+                                                        </tr>
+                                                        <?php  foreach ($listings as $key => $listing) :?>
+                                                             <?php
+                                                                            $skills = isset($listing['Field']['pairs']['jr_requiredskills'])?$CustomFields->display('jr_requiredskills',$listing):array();
+                                                                            $skills = implode(' | ', $skills);
+                                                                            $payrate = isset($listing['Field']['pairs']['jr_payrate'])?$CustomFields->display('jr_payrate',$listing):array();
+                                                                             $payrate = implode(' | ', $payrate);
+                                                                             $listing_url = cmsFramework::route($listing['Listing']['url']);
+                                                                        ?>
+                                                        <tr bgcolor="#f3f8fb">
+                                                            <td style="line-height:0;font-size:1px;border-left:1px solid #ccc">
+                                                                <img width="1" height="1" src="https://ci3.googleusercontent.com/proxy/4RHRIbpzAeGFkatKu_GSZnRF9_DM-JJuxGiFeaCsSXaEqyjwv04ZWts3J_3BgcX06vqRoYCk6O8i7XwiE0OuZH2HEytm2o0J_epCVN-l3pEyTvC5xhLzxS7_JmKw6sEEc8J_8YOAMSU9geAjeY75fg=s0-d-e1-ft#https://d2zhnbd2ktjxul.cloudfront.net/img/blank.gif?v=d21d1c04745849be6d176cdeb8d06f4b&amp;m=2" class="CToWUd">
+                                                            </td>
+                                                            <td style="padding:10px 0 15px 0;margin:0">
+                                                                <div style="overflow:hidden;width:460px;word-wrap:break-word">
+                                                                    <?php echo $Routes->content($listing['Listing']['title'],$listing,array('class'=>'none_decoration','target'=>'_blank','id'=>'jr-listing-title-'.$listing['Listing']['listing_id']))?>
+                                                                    <?php /* SUMMARY */ ?>
+
+                                                                        <?php
+                                                                        $list_show_abstract = $listing['Listing']['summary'] != '' && $this->Config->getOverride('list_show_abstract',$listing['ListingType']['config']);
+
+                                                                        $list_abstract_trim = $this->Config->getOverride('list_abstract_trim',$listing['ListingType']['config']);
+
+                                                                        if($list_show_abstract && ($list_abstract_trim != '' || $list_abstract_trim > 0)):?>
+
+                                                                            <div class="jrListingSummary">
+
+                                                                                <?php echo $Text->truncateWords($listing['Listing']['summary'],$list_abstract_trim);?>
+
+                                                                            </div>
+
+                                                                        <?php elseif($list_show_abstract == 1):?>
+
+                                                                            <div class="jrListingSummary">
+
+                                                                                <?php echo $listing['Listing']['summary'];?>
+
+                                                                            </div>
+
+                                                                        <?php endif;?>
+                                                                       
+                                                                    <p style="font-size:12px;line-height:1em;margin:10px 0 0 0;padding:0;color:#333"><b>Skills:</b>  <?php echo $skills;?> </p>
+
+                                                                </div>
+                                                            </td>
+                                                            <td valign="top" align="center" style="padding:14px 10px;margin:0">
+                                                                <p style="font-size:14px;line-height:1.2em;margin:0 0 10px 0"><?php echo  $payrate ?></p>
+                                                                <table cellspacing="0" cellpadding="0" width="102" border="0" bgcolor="#36a900" align="center" style="border:1px solid #008800;border-radius:2px;font-family:Arial,Helvetica,Sans-Serif">
+                                                                    <tbody><tr>
+                                                                        <td align="center" style="padding:5px 10px;margin:0;line-height:1em">
+                                                                            <a target="_blank" style="color:#fff;font-weight:bold;font-size:12px;text-align:center;text-decoration:none" href="<?php echo $listing_url ; ?>">Bid Now</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody></table>
+                                                            </td>
+                                                            <td style="line-height:0;font-size:1px;border-right:1px solid #ccc">
+                                                                <img width="1" height="1" src="https://ci3.googleusercontent.com/proxy/4RHRIbpzAeGFkatKu_GSZnRF9_DM-JJuxGiFeaCsSXaEqyjwv04ZWts3J_3BgcX06vqRoYCk6O8i7XwiE0OuZH2HEytm2o0J_epCVN-l3pEyTvC5xhLzxS7_JmKw6sEEc8J_8YOAMSU9geAjeY75fg=s0-d-e1-ft#https://d2zhnbd2ktjxul.cloudfront.net/img/blank.gif?v=d21d1c04745849be6d176cdeb8d06f4b&amp;m=2" class="CToWUd">
+                                                            </td>
+                                                        </tr>
+                                                       <?php endforeach;?> 
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                <br>
+                                                <table width="100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td align="center">
+                                                                <a target="_blank" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;color:#008800;text-decoration:underline;font-weight:bold" href="<?php echo $url ?>">
+                                                                    View more jobs !
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<style>
+a.none_decoration,a {
+    text-decoration: none;
+}
+</style>

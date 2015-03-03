@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<addon>   
+
+   <title>Notification Addon</title>
+
+   <name>jobsalert</name>
+
+   <description><![CDATA[Notification Addon]]></description>
+
+   <author>HoangHuynh</author>
+
+   <url>http://www.joomsolutions.com</url>
+
+   <created>15/09/2014</created>
+
+   <version>1.0.0.0</version>
+
+   <copyright>Copyright (C) 2010-2014 joomlasell Team</copyright>    
+
+   <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license> 
+
+</addon>

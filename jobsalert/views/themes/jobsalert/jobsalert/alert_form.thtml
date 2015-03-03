@@ -1,0 +1,53 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2014 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+<?php
+
+$searchFields['Job Information']['Fields']['jr_requiredskills']['selected'] = array('forklift-license','microsoft-office');
+?>
+<?php echo $CustomFields->makeFormFields($searchFields,'listing',1, __t("Select",true));?>
+
+<div class="jrFieldDiv jrLeft jrRadius jrHidden" data-group="<?php echo  $geomapInGroup?>">
+    <label><?php __t("Radius:");?></label>
+                    <?php echo $Form->select(
+                                    'data[Field][Listing][jr_radius]',
+                                    array(
+                                            1=>'1 '.$radius_metric,
+                                            5=>'5 '.$radius_metric,
+                                            10=>'10 '.$radius_metric,
+                                            15=>'15 '.$radius_metric,
+                                            20=>'20 '.$radius_metric
+                                    ),
+                                    $radius,
+                                    array(
+                                            'id'=>'jr_radius'.$module_id,
+                                            'class'=>'jrSelect',
+                                            'selected'=>$radius
+                                    )
+                    );?>&nbsp;&nbsp;&nbsp;
+</div>
+     <script>
+        jreviews.jobsalert.mutil = [
+         <?php 
+      
+         foreach ($searchFields as $key=>$groups)
+         {  
+             foreach ($groups['Fields'] as $k => $field) {
+                
+                          if(isset($field['multi'])&&$field['multi']=='selectmultiple'){
+                            echo "'$k',";
+                 }
+            }
+         }
+         ?>
+     ];
+     </script>
